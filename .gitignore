@@ -18,6 +18,9 @@
 # misc
 .DS_Store
 *.pem
+.idea
+.partykit
+tmp/
 
 # debug
 npm-debug.log*
