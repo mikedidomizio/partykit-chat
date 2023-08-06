@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {ReactNode, useEffect, useState} from "react";
-import {useSocket} from "@/app/SockerProvider";
-import {WsMessageProviderMessages} from "@/app/providers/Messages/message-server";
+import {useSocket} from "@/SockerProvider";
+import {WsMessageProviderMessages} from "@/providers/Messages/message-server";
 
 export type ChatMessage = {
     id: string,

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {ReactNode, useEffect, useState} from "react";
-import {useSocket} from "@/app/SockerProvider";
-import {User} from "@/app/providers/Users/users-server";
+import {useSocket} from "@/SockerProvider";
+import {User} from "@/providers/Users/users-server";
 
 type UsersContextType = {
     thisUser: string | null,

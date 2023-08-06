@@ -1,6 +1,6 @@
 import type { PartyKitServer } from "partykit/server";
 
-import * as serverConnections from '../app/providers'
+import * as serverConnections from '../providers'
 const connections = Object.values(serverConnections.default)
 
 export default {

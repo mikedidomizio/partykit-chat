@@ -1,6 +1,6 @@
-import {ChatMessage, useMessage} from "@/app/providers/Messages/MessageProvider";
+import {ChatMessage, useMessage} from "@/providers/Messages/MessageProvider";
 import {useEffect, useState} from "react";
-import {useUsers} from "@/app/providers/Users/UsersProvider";
+import {useUsers} from "@/providers/Users/UsersProvider";
 
 export const ChatMessages = () => {
     const {chatMessages } = useMessage()

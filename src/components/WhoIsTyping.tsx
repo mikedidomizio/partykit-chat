@@ -1,5 +1,5 @@
-import {useMessage} from "@/app/providers/Messages/MessageProvider";
-import {useUsers} from "@/app/providers/Users/UsersProvider";
+import {useMessage} from "@/providers/Messages/MessageProvider";
+import {useUsers} from "@/providers/Users/UsersProvider";
 
 export function WhoIsTyping() {
     const {usersWhoAreTyping} = useMessage()

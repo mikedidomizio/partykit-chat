@@ -1,9 +1,9 @@
-import {ChatForm} from "@/app/components/ChatForm";
-import {ChatMessages} from "@/app/components/ChatMessages";
-import {WhoIsTyping} from "@/app/components/WhoIsTyping";
+import {ChatForm} from "@/components/ChatForm";
+import {ChatMessages} from "@/components/ChatMessages";
+import {WhoIsTyping} from "@/components/WhoIsTyping";
 import React from "react";
-import {ConnectedUsers} from "@/app/components/ConnectedUsers";
-import {ChangeName} from "@/app/components/ChangeName";
+import {ConnectedUsers} from "@/components/ConnectedUsers";
+import {ChangeName} from "@/components/ChangeName";
 
 export const Content = () => {
     return <>

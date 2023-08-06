@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useUsers} from "@/app/providers/Users/UsersProvider";
+import {useUsers} from "@/providers/Users/UsersProvider";
 
 export function ChangeName() {
     const {setName} = useUsers()
