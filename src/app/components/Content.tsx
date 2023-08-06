@@ -1,22 +1,22 @@
-'use client'
-
 import {ChatForm} from "@/app/components/ChatForm";
-import {useUsers} from "@/app/providers/Users/UsersProvider";
 import {ChatMessages} from "@/app/components/ChatMessages";
-import {useMessage} from "@/app/providers/Messages/MessageProvider";
 import {WhoIsTyping} from "@/app/components/WhoIsTyping";
+import React from "react";
+import {ConnectedUsers} from "@/app/components/ConnectedUsers";
 
 export const Content = () => {
-    const {thisUser, users} = useUsers()
-
-
     return <>
-        Me: {thisUser}<br/>
-        {JSON.stringify(users)}
-        <div className="form-control">
-            <ChatMessages />
-            <WhoIsTyping />
+        <div className="flex flex-col w-full min-h-full">
+            <div className="form-control flex-1">
+                <div className="py-4 flex-1">
+                    <ConnectedUsers />
+                    <ChatMessages />
+                </div>
+            </div>
+            <div className="pt-2">
+                <WhoIsTyping />
+            </div>
+            <ChatForm />
         </div>
-        <ChatForm />
     </>
 }

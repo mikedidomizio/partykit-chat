@@ -34,8 +34,8 @@ export const ChatForm = () => {
         }
     }
 
-    return <>
-        <textarea value={textareaValue} onChange={handleUserTyping} className="textarea textarea-bordered" />
+    return <div className="space-y-4">
+        <textarea value={textareaValue} onChange={handleUserTyping} className="textarea textarea-bordered w-full resize-none" />
         <button className="btn" onClick={handleSubmit}>Submit</button>
-    </>
+    </div>
 }

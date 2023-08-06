@@ -15,5 +15,5 @@ export const ChatMessages = () => {
         return `${id}: ${text}`
     }).join("\n")
 
-    return <textarea readOnly key={JSON.stringify(messages)} value={textFormatted} onChange={() => {}} className="textarea textarea-bordered"></textarea>
+    return <textarea className="textarea textarea-bordered w-full h-full resize-none" readOnly key={JSON.stringify(messages)} value={textFormatted} onChange={() => {}}></textarea>
 }
