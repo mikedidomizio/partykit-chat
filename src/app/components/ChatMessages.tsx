@@ -1,8 +1,10 @@
 import {ChatMessage, useMessage} from "@/app/providers/Messages/MessageProvider";
 import {useEffect, useState} from "react";
+import {useUsers} from "@/app/providers/Users/UsersProvider";
 
 export const ChatMessages = () => {
     const {chatMessages } = useMessage()
+    const {users} = useUsers()
     const [messages, setMessages] = useState<Partial<ChatMessage>[]>([])
 
     useEffect(() => {
@@ -12,6 +14,12 @@ export const ChatMessages = () => {
     }, [chatMessages])
 
     const textFormatted = messages?.map(({ id, text}) => {
+        const foundUser = users.find(user => user.id === id)
+
+        if (foundUser?.name) {
+            return `${foundUser.name}: ${text}`
+        }
+
         return `${id}: ${text}`
     }).join("\n")
 

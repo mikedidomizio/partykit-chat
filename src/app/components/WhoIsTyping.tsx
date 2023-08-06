@@ -3,7 +3,7 @@ import {useUsers} from "@/app/providers/Users/UsersProvider";
 
 export function WhoIsTyping() {
     const {usersWhoAreTyping} = useMessage()
-    const {thisUser} = useUsers()
+    const {thisUser, users} = useUsers()
     const filteredOutThisUser = usersWhoAreTyping.filter(user => thisUser !== user)
 
     const someoneTyping = filteredOutThisUser.length > 0
@@ -16,7 +16,14 @@ export function WhoIsTyping() {
                 acc += ", "
             }
 
-            acc += cur
+            const foundUser = users.find(user => user.id === cur)
+
+            if (foundUser?.name) {
+                acc += foundUser.name
+            } else {
+                acc += cur
+            }
+
 
             return acc
         }, "")

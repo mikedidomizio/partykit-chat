@@ -8,7 +8,11 @@ export function ConnectedUsers() {
             acc += ", "
         }
 
-        acc += cur
+        if (cur.name) {
+            acc += cur.name
+        } else {
+            acc += cur.id
+        }
 
         return acc
     }, "")

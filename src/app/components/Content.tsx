@@ -3,6 +3,7 @@ import {ChatMessages} from "@/app/components/ChatMessages";
 import {WhoIsTyping} from "@/app/components/WhoIsTyping";
 import React from "react";
 import {ConnectedUsers} from "@/app/components/ConnectedUsers";
+import {ChangeName} from "@/app/components/ChangeName";
 
 export const Content = () => {
     return <>
@@ -14,9 +15,13 @@ export const Content = () => {
                 </div>
             </div>
             <div className="pt-2">
+
+            </div>
+            <div className="space-y-2">
                 <WhoIsTyping />
             </div>
             <ChatForm />
+            <ChangeName />
         </div>
     </>
 }
