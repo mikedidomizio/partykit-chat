@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useEffect, useMemo, useState} from "react";
 import {useSocket} from "@/app/SockerProvider";
 
 const UsersContext = React.createContext<any>(undefined)
@@ -9,11 +9,7 @@ function UsersProvider({children, room = 'my-room'}: { children: ReactNode, room
     const [users, setUsers] = useState<string[]>([])
     const [thisUser, setThisUser] = useState<string | null>(null)
 
-    console.log('my messages', messages)
-
     useEffect(() => {
-        console.log('messages', messages)
-
         if (messages.users) {
             setUsers(messages.users)
         }
@@ -33,11 +29,6 @@ function UsersProvider({children, room = 'my-room'}: { children: ReactNode, room
         }
     }, [messages])
 
-    const value = {
-        thisUser,
-        users,
-    }
-
     useEffect(() => {
         return () => {
             sendJson({
@@ -45,6 +36,11 @@ function UsersProvider({children, room = 'my-room'}: { children: ReactNode, room
             })
         }
     }, [])
+
+    const value = {
+        thisUser,
+        users,
+    }
 
     return <UsersContext.Provider value={value}>{children}</UsersContext.Provider>
 }

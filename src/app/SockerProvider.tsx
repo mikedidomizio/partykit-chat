@@ -1,26 +1,19 @@
 import * as React from 'react'
 import usePartySocket from "partysocket/react";
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useEffect, useMemo, useState} from "react";
 import {Message} from "partysocket/ws";
 
 const SocketContext = React.createContext<any>(undefined)
 
 function SocketProvider({children, room = 'my-room'}: { children: ReactNode, room?: string}) {
     const [messages, setMessages] = useState<Message[]>([])
-    const [users, setUsers] = useState<string[]>([])
 
     const socket = usePartySocket({
         host: "localhost:1999",
         room,
         onClose() {
-
-
         },
         onOpen(event) {
-            // console.log(event)
-            // setUsers([rand])
-
-            console.log(event)
         },
         onMessage(event) {
             setMessages(JSON.parse(event.data))
@@ -33,10 +26,17 @@ function SocketProvider({children, room = 'my-room'}: { children: ReactNode, roo
         messages,
         sendJson,
         socket,
-        users,
     }
 
-    return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+    const memoizedValue = useMemo(() => {
+     return {
+         messages,
+         sendJson,
+         socket,
+     }
+    }, [messages, sendJson, socket])
+
+    return <SocketContext.Provider value={memoizedValue}>{children}</SocketContext.Provider>
 }
 
 function useSocket() {

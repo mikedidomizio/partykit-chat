@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "party": "rm -rf ./tmp/test && partykit dev ./src/server/server.ts --persist ./tmp/test"
   },
   "dependencies": {
     "@types/node": "20.4.5",

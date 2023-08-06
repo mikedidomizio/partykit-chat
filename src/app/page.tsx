@@ -2,14 +2,17 @@
 import {SocketProvider} from "@/app/SockerProvider";
 import React from "react";
 import {Content} from "@/app/components/Content";
-import {UsersProvider} from "@/app/UsersProvider";
+import {UsersProvider} from "@/app/providers/Users/UsersProvider";
+import {MessageProvider} from "@/app/providers/Messages/MessageProvider";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen p-24">
         <SocketProvider>
             <UsersProvider>
-                <Content />
+                <MessageProvider>
+                    <Content />
+                </MessageProvider>
             </UsersProvider>
         </SocketProvider>
     </main>
