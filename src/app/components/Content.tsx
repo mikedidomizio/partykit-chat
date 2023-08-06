@@ -7,11 +7,13 @@ import {useMessage} from "@/app/providers/Messages/MessageProvider";
 
 export const Content = () => {
     const {thisUser, users} = useUsers()
+    const {usersWhoAreTyping} = useMessage()
 
     return <>
         Me: {thisUser}<br/>
         {JSON.stringify(users)}
         <ChatArea />
+        Users typing: {JSON.stringify(usersWhoAreTyping)}
         <Html />
     </>
 }

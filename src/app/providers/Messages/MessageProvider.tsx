@@ -12,10 +12,15 @@ type Message = {
 function MessageProvider({children}: { children: ReactNode}) {
     const {messages, sendJson} = useSocket()
     const [chatMessages, setChatMessages] = useState<Message[]>([])
+    const [usersWhoAreTyping, setUsersWhoAreTyping] = useState<string[]>([])
 
     useEffect(() => {
         if (messages.newMessage) {
             setChatMessages(messages.newMessage)
+        }
+
+        if (messages.isTyping) {
+            setUsersWhoAreTyping(messages.isTyping)
         }
 
     }, [messages])
@@ -29,9 +34,23 @@ function MessageProvider({children}: { children: ReactNode}) {
         })
     }
 
+    const sendIsTyping = (userTyping: string, isTyping: boolean) => {
+        if (isTyping) {
+            sendJson({
+                isTyping: userTyping
+            })
+        } else {
+            sendJson({
+                isNotTyping: userTyping
+            })
+        }
+    }
+
     const value = {
         chatMessages,
         sendMessage,
+        sendIsTyping,
+        usersWhoAreTyping
     }
 
     return <MessageContext.Provider value={value}>{children}</MessageContext.Provider>
