@@ -4,7 +4,6 @@ import React from "react";
 import {Content} from "@/components/Content";
 import {UsersProvider} from "@/providers/Users/UsersProvider";
 import {MessageProvider} from "@/providers/Messages/MessageProvider";
-import {useRouter} from "next/navigation";
 
 export default function Page({ params }: {params : { room: string}}) {
     return (

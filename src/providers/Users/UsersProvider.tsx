@@ -31,7 +31,7 @@ function UsersProvider({children}: { children: ReactNode }) {
         }
 
         if (messages.removeUser) {
-            const filteredUser = users.filter(user => user !== messages.removeUser)
+            const filteredUser = users.filter(user => user.id !== messages.removeUser)
             setUsers((users) => filteredUser)
         }
 
