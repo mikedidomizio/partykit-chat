@@ -17,11 +17,12 @@ export const Content = () => {
             <div className="pt-2">
 
             </div>
-            <div className="space-y-2">
+            <div className="flex flex-col space-y-2">
                 <WhoIsTyping />
+                <ChatForm />
+                <ChangeName />
             </div>
-            <ChatForm />
-            <ChangeName />
+
         </div>
     </>
 }
