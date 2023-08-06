@@ -3,7 +3,7 @@ import {useUsers} from "@/app/providers/Users/UsersProvider";
 import {useMessage} from "@/app/providers/Messages/MessageProvider";
 import {useDebounce} from "usehooks-ts";
 
-export const Html = () => {
+export const ChatForm = () => {
     const {sendIsTyping, sendMessage} = useMessage()
     const {thisUser} = useUsers()
     const [isTyping, setIsTyping] = useState<number | null>(null)
@@ -35,7 +35,7 @@ export const Html = () => {
     }
 
     return <>
-        <textarea value={textareaValue} onChange={handleUserTyping} className="border-black border-2" />
-        <button onClick={handleSubmit}>Submit</button>
+        <textarea value={textareaValue} onChange={handleUserTyping} className="textarea textarea-bordered" />
+        <button className="btn" onClick={handleSubmit}>Submit</button>
     </>
 }

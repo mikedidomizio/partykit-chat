@@ -1,7 +1,7 @@
 import {ChatMessage, useMessage} from "@/app/providers/Messages/MessageProvider";
 import {useEffect, useState} from "react";
 
-export const ChatArea = () => {
+export const ChatMessages = () => {
     const {chatMessages } = useMessage()
     const [messages, setMessages] = useState<Partial<ChatMessage>[]>([])
 
@@ -15,5 +15,5 @@ export const ChatArea = () => {
         return `${id}: ${text}`
     }).join("\n")
 
-    return <textarea readOnly key={JSON.stringify(messages)} value={textFormatted} onChange={() => {}} className="border-red-600 border-2"></textarea>
+    return <textarea readOnly key={JSON.stringify(messages)} value={textFormatted} onChange={() => {}} className="textarea textarea-bordered"></textarea>
 }
