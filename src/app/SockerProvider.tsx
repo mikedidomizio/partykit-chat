@@ -1,20 +1,26 @@
 import * as React from 'react'
 import usePartySocket from "partysocket/react";
-import {ReactNode, useEffect, useMemo, useState} from "react";
-import {Message} from "partysocket/ws";
+import {ReactNode, useState} from "react";
+import PartySocket from "partysocket";
 
-const SocketContext = React.createContext<any>(undefined)
+type SocketContextType = {
+    messages: Record<string, any>,
+    sendJson: (obj: Object) => void,
+    socket: PartySocket,
+}
+
+const SocketContext = React.createContext<SocketContextType | undefined>(undefined)
 
 function SocketProvider({children, room = 'my-room'}: { children: ReactNode, room?: string}) {
-    const [messages, setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<Record<string, string>>({})
 
     const socket = usePartySocket({
         host: "localhost:1999",
         room,
         onClose() {
         },
-        onOpen(event) {
-        },
+        // onOpen(event) {
+        // },
         onMessage(event) {
             setMessages(JSON.parse(event.data))
         },
@@ -28,15 +34,7 @@ function SocketProvider({children, room = 'my-room'}: { children: ReactNode, roo
         socket,
     }
 
-    const memoizedValue = useMemo(() => {
-     return {
-         messages,
-         sendJson,
-         socket,
-     }
-    }, [messages, sendJson, socket])
-
-    return <SocketContext.Provider value={memoizedValue}>{children}</SocketContext.Provider>
+    return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
 }
 
 function useSocket() {

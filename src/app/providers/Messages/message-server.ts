@@ -1,5 +1,11 @@
 import {PartyKitServer} from "partykit/server";
 
+export type WsMessages = {
+    newMessage: string,
+    isTyping: string,
+    isNotTyping: string
+}
+
 export default {
     async onConnect(conn, room) {
     },
@@ -14,7 +20,7 @@ export default {
         }))
     },
     async onMessage(msg, conn, room) {
-        const parsedMsg = JSON.parse(msg as string)
+        const parsedMsg: WsMessages = JSON.parse(msg as string)
 
         if (parsedMsg.newMessage) {
             room.broadcast(msg as string)

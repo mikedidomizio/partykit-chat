@@ -1,8 +1,15 @@
 import * as React from 'react'
-import {ReactNode, useEffect, useMemo, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import {useSocket} from "@/app/SockerProvider";
 
-const MessageContext = React.createContext<any>(undefined)
+type MessageContextType = {
+    chatMessages: Message[],
+    sendMessage: (userId: string, text: string) => void,
+    sendIsTyping: (userIdTyping: string, isTyping: boolean) => void,
+    usersWhoAreTyping: string[]
+}
+
+const MessageContext = React.createContext<MessageContextType | undefined>(undefined)
 
 type Message = {
     id: string,
@@ -25,10 +32,10 @@ function MessageProvider({children}: { children: ReactNode}) {
 
     }, [messages])
 
-    const sendMessage = (id: string, text: string) => {
+    const sendMessage = (userId: string, text: string) => {
         sendJson({
             newMessage: {
-                id,
+                id: userId,
                 text,
             }
         })
