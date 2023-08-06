@@ -2,14 +2,15 @@ import * as React from 'react'
 import usePartySocket from "partysocket/react";
 import {ReactNode, useState} from "react";
 import PartySocket from "partysocket";
+import {PartialRecord} from "@/types/PartialRecord";
 
-type SocketContextType = {
+type SocketContextType<T> = {
     messages: Record<string, any>,
-    sendJson: (obj: Object) => void,
+    sendJson: (obj: PartialRecord<keyof T, any>) => void,
     socket: PartySocket,
 }
 
-const SocketContext = React.createContext<SocketContextType | undefined>(undefined)
+const SocketContext = React.createContext<SocketContextType<unknown> | undefined>(undefined)
 
 function SocketProvider({children, room = 'my-room'}: { children: ReactNode, room?: string}) {
     const [messages, setMessages] = useState<Record<string, string>>({})
@@ -37,12 +38,12 @@ function SocketProvider({children, room = 'my-room'}: { children: ReactNode, roo
     return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
 }
 
-function useSocket() {
+function useSocket<T>() {
     const context = React.useContext(SocketContext)
     if (context === undefined) {
         throw new Error('useSocket must be used within a SocketProvider')
     }
-    return context
+    return context as SocketContextType<T>
 }
 
 export {SocketProvider, useSocket}

@@ -1,9 +1,15 @@
 import * as React from 'react'
 import {ReactNode, useEffect, useState} from "react";
 import {useSocket} from "@/app/SockerProvider";
+import {WsMessageProviderMessages} from "@/app/providers/Messages/message-server";
+
+export type ChatMessage = {
+    id: string,
+    text: string,
+}
 
 type MessageContextType = {
-    chatMessages: Message[],
+    chatMessages: Partial<ChatMessage>,
     sendMessage: (userId: string, text: string) => void,
     sendIsTyping: (userIdTyping: string, isTyping: boolean) => void,
     usersWhoAreTyping: string[]
@@ -11,14 +17,9 @@ type MessageContextType = {
 
 const MessageContext = React.createContext<MessageContextType | undefined>(undefined)
 
-type Message = {
-    id: string,
-    text: string,
-}
-
-function MessageProvider({children}: { children: ReactNode}) {
-    const {messages, sendJson} = useSocket()
-    const [chatMessages, setChatMessages] = useState<Message[]>([])
+export function MessageProvider({children}: { children: ReactNode}) {
+    const {messages, sendJson} = useSocket<WsMessageProviderMessages>()
+    const [chatMessages, setChatMessages] = useState<Partial<ChatMessage>>({})
     const [usersWhoAreTyping, setUsersWhoAreTyping] = useState<string[]>([])
 
     useEffect(() => {
@@ -37,7 +38,7 @@ function MessageProvider({children}: { children: ReactNode}) {
             newMessage: {
                 id: userId,
                 text,
-            }
+            },
         })
     }
 
@@ -63,12 +64,10 @@ function MessageProvider({children}: { children: ReactNode}) {
     return <MessageContext.Provider value={value}>{children}</MessageContext.Provider>
 }
 
-function useMessage() {
+export function useMessage() {
     const context = React.useContext(MessageContext)
     if (context === undefined) {
         throw new Error('useMessage must be used within a UsersProvider')
     }
     return context
 }
-
-export {MessageProvider, useMessage}

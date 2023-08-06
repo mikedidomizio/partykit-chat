@@ -10,21 +10,28 @@ export const Html = () => {
     const debouncedValue = useDebounce<number | null>(isTyping, 3000)
 
     useEffect(() => {
-        setIsTyping(null)
-        sendIsTyping(thisUser, false)
+        if (thisUser) {
+            setIsTyping(null)
+            sendIsTyping(thisUser, false)
+        }
     }, [debouncedValue])
 
     const [textareaValue, setTextareaValue] = useState('')
 
     const handleSubmit = () => {
-        sendMessage(thisUser, textareaValue)
-        setTextareaValue('')
+        if (thisUser) {
+            sendMessage(thisUser, textareaValue)
+            setTextareaValue('')
+            sendIsTyping(thisUser, false)
+        }
     }
 
     const handleUserTyping = (e: any) => {
-        sendIsTyping(thisUser, true)
-        setTextareaValue(e.target.value)
-        setIsTyping(new Date().getTime())
+        if (thisUser) {
+            sendIsTyping(thisUser, true)
+            setTextareaValue(e.target.value)
+            setIsTyping(new Date().getTime())
+        }
     }
 
     return <>

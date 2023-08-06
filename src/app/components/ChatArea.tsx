@@ -1,9 +1,9 @@
-import {useMessage} from "@/app/providers/Messages/MessageProvider";
+import {ChatMessage, useMessage} from "@/app/providers/Messages/MessageProvider";
 import {useEffect, useState} from "react";
 
 export const ChatArea = () => {
     const {chatMessages } = useMessage()
-    const [messages, setMessages] = useState<{ id: string, text: string }[]>([])
+    const [messages, setMessages] = useState<Partial<ChatMessage>[]>([])
 
     useEffect(() => {
         if (chatMessages.id) {

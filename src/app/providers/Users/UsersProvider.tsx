@@ -1,8 +1,13 @@
 import * as React from 'react'
-import {ReactNode, useEffect, useMemo, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import {useSocket} from "@/app/SockerProvider";
 
-const UsersContext = React.createContext<any>(undefined)
+type UsersContextType = {
+    thisUser: string | null,
+    users: string[],
+}
+
+const UsersContext = React.createContext<UsersContextType | undefined>(undefined)
 
 function UsersProvider({children, room = 'my-room'}: { children: ReactNode, room?: string}) {
     const {messages, sendJson} = useSocket()
