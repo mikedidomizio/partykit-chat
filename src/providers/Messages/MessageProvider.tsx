@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {ReactNode, useCallback, useEffect, useState} from "react";
-import {useSocket} from "@/SockerProvider";
-import {ChatMessage, WsMessageProviderMessages} from "@/providers/Messages/message-server";
+import {ChatMessage, MessageMessages, WsMessageProviderMessages} from "@/providers/Messages/message-server";
+import {useSocket, useSocketMessage} from "@/SockerProvider";
 
 type MessageContextType = {
     chatMessages: Partial<ChatMessage>[],
@@ -13,35 +13,36 @@ type MessageContextType = {
 const MessageContext = React.createContext<MessageContextType | undefined>(undefined)
 
 export function MessageProvider({children}: { children: ReactNode}) {
-    const {messages, sendJson} = useSocket<WsMessageProviderMessages>()
+    const {sendJson} = useSocket<WsMessageProviderMessages>()
     const [chatMessages, setChatMessages] = useState<Partial<ChatMessage>[]>([])
     const [usersWhoAreTyping, setUsersWhoAreTyping] = useState<string[]>([])
 
-    useEffect(() => {
-        if (messages.newMessage) {
-            setChatMessages([messages.newMessage])
-        }
+    useSocketMessage<ChatMessage>((obj) => {
+        setChatMessages([obj])
+    }, MessageMessages.newMessage)
 
-        if (messages.usersTyping) {
-            setUsersWhoAreTyping(messages.usersTyping)
-        }
+    useSocketMessage<string[]>((obj) => {
+        setUsersWhoAreTyping(obj)
+    }, MessageMessages.isTyping)
 
-        if (messages.messages) {
-            setChatMessages(messages.messages)
-        }
+    useSocketMessage<string[]>((obj) => {
+        setUsersWhoAreTyping(obj)
+    }, MessageMessages.isNotTyping)
 
-    }, [messages])
+    useSocketMessage<ChatMessage[]>((obj) => {
+        setChatMessages(obj)
+    }, MessageMessages.messages)
 
-    const sendMessage = useCallback((userId: string, text: string) => {
+    const sendMessage = (userId: string, text: string) => {
         sendJson({
             newMessage: {
                 id: userId,
                 text,
             },
         })
-    }, [sendJson])
+    }
 
-    const sendIsTyping = useCallback((userTyping: string, isTyping: boolean) => {
+    const sendIsTyping = (userTyping: string, isTyping: boolean) => {
         if (isTyping) {
             sendJson({
                 isTyping: userTyping
@@ -51,7 +52,7 @@ export function MessageProvider({children}: { children: ReactNode}) {
                 isNotTyping: userTyping
             })
         }
-    }, [sendJson])
+    }
 
     const value = {
         chatMessages,

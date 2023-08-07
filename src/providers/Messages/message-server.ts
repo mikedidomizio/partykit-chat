@@ -13,6 +13,18 @@ export type WsMessageProviderMessages = {
     isNotTyping: string
 }
 
+export enum MessageMessages {
+    "isTyping" = "isTyping",
+    "isNotTyping" = "isNotTyping",
+    "newMessage" = "newMessage",
+    "messages" = "messages",
+    //
+    "newUser"= "newUser",
+    "removeUser" = "removeUser",
+    "userId" = "userId",
+    "users" = "users",
+}
+
 export default {
     async onConnect(conn, room) {
         const messages: ChatMessage[] = await room.storage.get("messages") ?? []
@@ -30,7 +42,7 @@ export default {
         await room.storage.put("usersTyping", userRemovedFromTypingList)
 
         room.broadcast(JSON.stringify({
-            usersTyping: userRemovedFromTypingList
+            [MessageMessages.isTyping]: userRemovedFromTypingList
         }))
     },
     async onMessage(msg, conn, room) {
@@ -38,6 +50,7 @@ export default {
 
         // todo don't necessarily need to send the id, since we know the person sending this
         if (parsedMsg.newMessage && parsedMsg.newMessage.id === conn.id) {
+            console.log('new message')
             const messages: ChatMessage[] = await room.storage.get("messages") ?? []
             messages.push(parsedMsg.newMessage)
             await room.storage.put("messages", messages)
@@ -51,7 +64,7 @@ export default {
             await room.storage.put("usersTyping", userAddedToTypingList)
 
             room.broadcast(JSON.stringify({
-                usersTyping: userAddedToTypingList
+                [MessageMessages.isTyping]: userAddedToTypingList
             }))
         }
 
@@ -62,7 +75,7 @@ export default {
             await room.storage.put("usersTyping", userRemovedFromTypingList)
 
             room.broadcast(JSON.stringify({
-                usersTyping: userRemovedFromTypingList
+                [MessageMessages.isNotTyping]: userRemovedFromTypingList
             }))
         }
     },
