@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ReactNode, useEffect, useState} from 'react'
-import {useSocketMessage, useSocket} from "@/SockerProvider";
+import {useSocket, useSocketMessage} from "@/SockerProvider";
 import {User, UserMessages} from "@/providers/Users/users-server";
 import {useTimeout} from "usehooks-ts";
 
@@ -40,23 +40,18 @@ function UsersProvider({children}: { children: ReactNode }) {
     }, UserMessages.removeUser)
 
     useSocketMessage<User>((obj) => {
-        const user = users.find(user => obj.id === user.id)
-
-        // ensures we don't go into a loop by checking to see if the name is different
-        if (user && user.name !== obj.name) {
-            setUsers((users) => {
-                return users.map(user => {
-                    if (user.id === obj.id && obj.name) {
-                        return {
-                            ...user,
-                            name: obj.name
-                        }
+        setUsers((users) => {
+            return users.map(user => {
+                if (user.id === obj.id && obj.name) {
+                    return {
+                        ...user,
+                        name: obj.name
                     }
+                }
 
-                    return user
-                })
+                return user
             })
-        }
+        })
     }, UserMessages.nameChanged)
 
     // on unload we tell the server to remove the user

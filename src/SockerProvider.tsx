@@ -4,7 +4,11 @@ import {ReactNode, useCallback, useEffect, useState} from "react";
 import {PartialRecord} from "@/types/PartialRecord";
 
 type SocketContextType<T> = {
+    /**
+     * Ideally use the useMessages hook instead to narrow down the data you are looking for
+     */
     messages: Record<keyof T, any>,
+    setMessages:  React.Dispatch<React.SetStateAction<Record<string, string>>>,
     sendJson: (obj: PartialRecord<any, any>) => void,
 }
 
@@ -31,6 +35,7 @@ function SocketProvider({children, room}: { children: ReactNode, room: string}) 
 
     const value = {
         messages,
+        setMessages,
         sendJson,
     }
 
@@ -38,15 +43,18 @@ function SocketProvider({children, room}: { children: ReactNode, room: string}) 
 }
 
 function useSocketMessage<T>(callbackFn: (args: T) => void, message: string) {
-    const context = useSocket<T>()
+    const {messages, setMessages} = useSocket<T>()
     // @ts-ignore
-    const possibleMessage = context.messages[message]
+    const possibleMessage = messages[message]
 
     useEffect(() => {
         if (possibleMessage) {
+            // clear the message so providers don't have to handle things, they will only fire once
+            // this is done before the `callbackFn`.  I feel if it fails it may not continue therefore if it fails, that message is discarded
+            setMessages({})
             callbackFn(possibleMessage)
         }
-    }, [callbackFn, possibleMessage])
+    }, [callbackFn, possibleMessage, setMessages])
 }
 
 function useSocket<T>() {
