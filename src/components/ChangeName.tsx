@@ -2,11 +2,11 @@ import {useState} from "react";
 import {useUsers} from "@/providers/Users/UsersProvider";
 
 export function ChangeName() {
-    const {setName, thisUser} = useUsers()
+    const {sendName, thisUser} = useUsers()
     const [nameField, setNameField] = useState('')
     const handleSaveName = () => {
         setNameField("")
-        setName(nameField)
+        sendName(nameField)
     }
 
     return <div className="form">

@@ -7,7 +7,7 @@ import {useTimeout, useToggle} from "usehooks-ts";
 type UsersContextType = {
     thisUser: string | null,
     users: User[],
-    setName: (name: string) => void
+    sendName: (name: string) => void
 }
 
 const UsersContext = React.createContext<UsersContextType | undefined>(undefined)
@@ -34,8 +34,6 @@ function UsersProvider({children}: { children: ReactNode }) {
         }
 
         if (messages.newUser) {
-            console.log('new user', thisUser)
-
             setUsers((users) => [...users, messages.newUser])
         }
 
@@ -69,7 +67,7 @@ function UsersProvider({children}: { children: ReactNode }) {
         }
     }, [])
 
-    const setName = (name: string) => {
+    const sendName = (name: string) => {
         return sendJson({
             changeName: name,
         })
@@ -78,7 +76,7 @@ function UsersProvider({children}: { children: ReactNode }) {
     const value = {
         thisUser,
         users,
-        setName,
+        sendName,
     }
 
     return <UsersContext.Provider value={value}>{children}</UsersContext.Provider>

@@ -34,8 +34,6 @@ export default {
 
         await room.storage.put("users", removedThisUser)
 
-        console.log('removed user', removedThisUser[0].id)
-
         room.broadcast(JSON.stringify({
             removeUser: conn.id
         }))
