@@ -14,15 +14,11 @@ export const Content = () => {
                     <ChatMessages />
                 </div>
             </div>
-            <div className="pt-2">
-
-            </div>
             <div className="flex flex-col space-y-2">
                 <WhoIsTyping />
                 <ChatForm />
                 <ChangeName />
             </div>
-
         </div>
     </>
 }

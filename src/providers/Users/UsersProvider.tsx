@@ -1,8 +1,8 @@
 import * as React from 'react'
-import {ReactNode, useEffect, useState} from "react";
-import {useSocket} from "@/SockerProvider";
-import {User} from "@/providers/Users/users-server";
-import {useTimeout, useToggle} from "usehooks-ts";
+import {ReactNode, useEffect, useState} from 'react'
+import {useSocketMessage, useSocket} from "@/SockerProvider";
+import {User, UserMessages} from "@/providers/Users/users-server";
+import {useTimeout} from "usehooks-ts";
 
 type UsersContextType = {
     thisUser: string | null,
@@ -13,7 +13,7 @@ type UsersContextType = {
 const UsersContext = React.createContext<UsersContextType | undefined>(undefined)
 
 function UsersProvider({children}: { children: ReactNode }) {
-    const {messages, sendJson} = useSocket()
+    const {sendJson} = useSocket<typeof UserMessages>()
     const [users, setUsers] = useState<User[]>([])
     const [thisUser, setThisUser] = useState<string | null>(null)
 
@@ -23,31 +23,33 @@ function UsersProvider({children}: { children: ReactNode }) {
         }
     }, 3000)
 
-    useEffect(() => {
-        if (messages.users) {
-            setUsers(messages.users)
-        }
+    useSocketMessage<string>((obj) => {
+        setThisUser(obj)
+    }, UserMessages.userId)
 
-        if (messages.userId) {
-            // this is the current users ID
-            setThisUser(messages.userId)
-        }
+    useSocketMessage<User[]>((obj) => {
+        setUsers(obj)
+    }, UserMessages.users)
 
-        if (messages.newUser) {
-            setUsers((users) => [...users, messages.newUser])
-        }
+    useSocketMessage<User>((obj) => {
+        setUsers((users) => [...users, obj])
+    }, UserMessages.newUser)
 
-        if (messages.removeUser) {
-            setUsers((users) => users.filter(user => user.id !== messages.removeUser))
-        }
+    useSocketMessage<string>((userId) => {
+        setUsers((users) => users.filter(user => user.id !== userId))
+    }, UserMessages.removeUser)
 
-        if (messages.nameChanged) {
+    useSocketMessage<User>((obj) => {
+        const user = users.find(user => obj.id === user.id)
+
+        // ensures we don't go into a loop by checking to see if the name is different
+        if (user && user.name !== obj.name) {
             setUsers((users) => {
                 return users.map(user => {
-                    if (user.id === messages.nameChanged.id && messages.nameChanged.name) {
+                    if (user.id === obj.id && obj.name) {
                         return {
                             ...user,
-                            name: messages.nameChanged.name
+                            name: obj.name
                         }
                     }
 
@@ -55,7 +57,7 @@ function UsersProvider({children}: { children: ReactNode }) {
                 })
             })
         }
-    }, [messages])
+    }, UserMessages.nameChanged)
 
     // on unload we tell the server to remove the user
     useEffect(() => {

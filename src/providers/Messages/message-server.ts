@@ -7,6 +7,8 @@ export type ChatMessage = {
 
 export type WsMessageProviderMessages = {
     newMessage: ChatMessage,
+    messages: ChatMessage[],
+    usersTyping: string,
     isTyping: string,
     isNotTyping: string
 }
@@ -23,12 +25,12 @@ export default {
     },
     async onClose(conn, room) {
         // on close, we force remove the user
-        const isTyping = await room.storage.get<string[]>("isTyping") ?? []
-        const userRemovedFromTypingList = isTyping.filter(user => user !== conn.id)
-        await room.storage.put("isTyping", userRemovedFromTypingList)
+        const usersTyping = await room.storage.get<string[]>("usersTyping") ?? []
+        const userRemovedFromTypingList = usersTyping.filter(user => user !== conn.id)
+        await room.storage.put("usersTyping", userRemovedFromTypingList)
 
         room.broadcast(JSON.stringify({
-            isTyping: userRemovedFromTypingList
+            usersTyping: userRemovedFromTypingList
         }))
     },
     async onMessage(msg, conn, room) {

@@ -66,7 +66,7 @@ export function MessageProvider({children}: { children: ReactNode}) {
 export function useMessage() {
     const context = React.useContext(MessageContext)
     if (context === undefined) {
-        throw new Error('useMessage must be used within a MessageProvider')
+        throw new Error('useSocketMessage must be used within a MessageProvider')
     }
     return context
 }

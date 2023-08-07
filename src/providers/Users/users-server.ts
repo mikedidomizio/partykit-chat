@@ -5,23 +5,43 @@ export type User = {
     name?: string,
 }
 
+export enum UserMessages {
+    "nameChanged" = "nameChanged",
+    "newUser"= "newUser",
+    "removeUser" = "removeUser",
+    "userId" = "userId",
+    "users" = "users",
+}
+
+type Users = Map<string, User>
+
 export default {
     async onConnect(conn, room) {
         // updates user storage list with newly connected user
-        const users = await room.storage.get<User[]>("users") ?? []
-        const usersListWithNewUser = [...users, {
+        let users = await room.storage.get<Users>("users")
+
+        // initial setup
+        if (!users) {
+           await room.storage.put<Users>("users", new Map())
+        }
+
+        users = await room.storage.get<Users>("users") as Users
+
+        users.set(conn.id, {
             id: conn.id,
-        }]
-        await room.storage.put("users", usersListWithNewUser)
+        })
+
+        await room.storage.put<Users>("users", users)
+        const flatUsersArrId = Array.from(users, ([, value]) => value)
 
         // ⚠️ `conn.send` before broadcast otherwise the `send` doesn't fire
         conn.send(JSON.stringify({
-            userId: conn.id,
-            users: usersListWithNewUser
+            [UserMessages.userId]: conn.id,
+            [UserMessages.users]: flatUsersArrId
         }))
 
         room.broadcast(JSON.stringify({
-            newUser: {
+            [UserMessages.newUser]: {
                 id: conn.id
             }
         }), [conn.id])
@@ -29,14 +49,18 @@ export default {
 
     async onClose(conn, room) {
         // updates storage with user list with user removed
-        const users = await room.storage.get<User[]>("users") ?? []
-        const removedThisUser = users.filter(user => user.id !== conn.id)
+        const users = await room.storage.get<Map<string, User>>("users")
 
-        await room.storage.put("users", removedThisUser)
 
-        room.broadcast(JSON.stringify({
-            removeUser: conn.id
-        }))
+        if (users) {
+            users.delete(conn.id)
+
+            await room.storage.put("users", users)
+
+            room.broadcast(JSON.stringify({
+                [UserMessages.removeUser]: conn.id
+            }))
+        }
     },
 
     async onMessage(msg, conn, room) {
@@ -47,25 +71,25 @@ export default {
         }
 
         if (parsedMsg.changeName) {
-            const users = await room.storage.get<User[]>("users")
+            const users = await room.storage.get<Users>("users")
 
-            const updatedUsers = users?.map(user => {
-                if (user.id === conn.id) {
+            if (users) {
+                const user = users.get(conn.id)
+
+                if (user) {
                     user.name = parsedMsg.changeName
-                    return user
+                    users.set(conn.id, user)
+
+                    await room.storage.put<Users>("users", users)
+
+                    room.broadcast(JSON.stringify({
+                        [UserMessages.nameChanged]: {
+                            id: conn.id,
+                            name: parsedMsg.changeName
+                        }
+                    }))
                 }
-
-                return user
-            }) ?? []
-
-            await room.storage.put<User[]>("users", updatedUsers)
-
-            room.broadcast(JSON.stringify({
-                nameChanged: {
-                    id: conn.id,
-                    name: parsedMsg.changeName
-                }
-            }))
+            }
         }
     },
 } satisfies PartyKitServer;
