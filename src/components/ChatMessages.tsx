@@ -1,6 +1,7 @@
-import {ChatMessage, useMessage} from "@/providers/Messages/MessageProvider";
+import {useMessage} from "@/providers/Messages/MessageProvider";
 import {useEffect, useState} from "react";
 import {useUsers} from "@/providers/Users/UsersProvider";
+import {ChatMessage} from "@/providers/Messages/message-server";
 
 export const ChatMessages = () => {
     const {chatMessages } = useMessage()
@@ -8,8 +9,8 @@ export const ChatMessages = () => {
     const [messages, setMessages] = useState<Partial<ChatMessage>[]>([])
 
     useEffect(() => {
-        if (chatMessages.id) {
-            setMessages([...messages, chatMessages])
+        if (chatMessages) {
+            setMessages([...messages, ...chatMessages])
         }
     }, [chatMessages])
 

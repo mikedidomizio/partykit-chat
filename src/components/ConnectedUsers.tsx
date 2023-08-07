@@ -1,9 +1,13 @@
 import {useUsers} from "@/providers/Users/UsersProvider";
 
 export function ConnectedUsers() {
-    const {users} = useUsers()
+    const {thisUser, users} = useUsers()
 
-    let textFormatted =  users.reduce((acc, cur) => {
+    let textFormattedWithoutThisUser =  users.reduce((acc, cur) => {
+        if (cur.id === thisUser) {
+            return acc
+        }
+
         if (acc !== "") {
             acc += ", "
         }
@@ -17,5 +21,5 @@ export function ConnectedUsers() {
         return acc
     }, "")
 
-    return <>({users.length}) {textFormatted}</>
+    return <>({users.length}) {textFormattedWithoutThisUser} <span className="text-green-600">{thisUser}</span></>
 }

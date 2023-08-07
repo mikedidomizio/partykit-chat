@@ -29,13 +29,14 @@ export const ChatForm = () => {
     const handleUserTyping = (e: any) => {
         if (thisUser) {
             sendIsTyping(thisUser, true)
-            setTextareaValue(e.target.value)
             setIsTyping(new Date().getTime())
         }
+
+        setTextareaValue(e.target.value)
     }
 
     return <div >
         <textarea placeholder="Type a message..." value={textareaValue} onChange={handleUserTyping} className="textarea textarea-bordered w-full resize-none" />
-        <button className="btn" disabled={textareaValue.trim() === ""} onClick={handleSubmit}>Submit</button>
+        <button className="btn" disabled={!thisUser || textareaValue.trim() === ""} onClick={handleSubmit}>Submit</button>
     </div>
 }

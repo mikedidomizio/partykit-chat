@@ -2,6 +2,7 @@ import * as React from 'react'
 import {ReactNode, useEffect, useState} from "react";
 import {useSocket} from "@/SockerProvider";
 import {User} from "@/providers/Users/users-server";
+import {useTimeout, useToggle} from "usehooks-ts";
 
 type UsersContextType = {
     thisUser: string | null,
@@ -16,6 +17,12 @@ function UsersProvider({children}: { children: ReactNode }) {
     const [users, setUsers] = useState<User[]>([])
     const [thisUser, setThisUser] = useState<string | null>(null)
 
+    useTimeout(() => {
+        if (!thisUser) {
+            throw new Error('Could not get the current user id?')
+        }
+    }, 3000)
+
     useEffect(() => {
         if (messages.users) {
             setUsers(messages.users)
@@ -27,6 +34,8 @@ function UsersProvider({children}: { children: ReactNode }) {
         }
 
         if (messages.newUser) {
+            console.log('new user', thisUser)
+
             setUsers((users) => [...users, messages.newUser])
         }
 
