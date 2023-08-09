@@ -10,7 +10,7 @@ export const ChatMessages = () => {
 
     useEffect(() => {
         if (chatMessages) {
-            setMessages([...messages, ...chatMessages])
+            setMessages((messages) => [...messages, ...chatMessages])
         }
     }, [chatMessages])
 
