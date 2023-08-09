@@ -38,23 +38,22 @@ function UsersProvider({children}: { children: ReactNode }) {
         }
 
         if (messages.removeUser) {
-            const filteredUser = users.filter(user => user.id !== messages.removeUser)
-            setUsers((users) => filteredUser)
+            setUsers((users) => users.filter(user => user.id !== messages.removeUser))
         }
 
         if (messages.nameChanged) {
-            const updatedUsers = users.map(user => {
-                if (user.id === messages.nameChanged.id && messages.nameChanged.name) {
-                    return {
-                        ...user,
-                        name: messages.nameChanged.name
+            setUsers((users) => {
+                return users.map(user => {
+                    if (user.id === messages.nameChanged.id && messages.nameChanged.name) {
+                        return {
+                            ...user,
+                            name: messages.nameChanged.name
+                        }
                     }
-                }
 
-                return user
+                    return user
+                })
             })
-
-            setUsers(updatedUsers)
         }
     }, [messages])
 
@@ -65,7 +64,7 @@ function UsersProvider({children}: { children: ReactNode }) {
                 removeUser: thisUser
             })
         }
-    }, [])
+    }, [sendJson, thisUser])
 
     const sendName = (name: string) => {
         return sendJson({

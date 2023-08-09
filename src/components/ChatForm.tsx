@@ -4,7 +4,7 @@ import {useMessage} from "@/providers/Messages/MessageProvider";
 import {useDebounce} from "usehooks-ts";
 
 export const ChatForm = () => {
-    const {sendIsTyping, sendMessage} = useMessage()
+    const {sendIsTyping, sendMessage, usersWhoAreTyping} = useMessage()
     const {thisUser} = useUsers()
     const [isTyping, setIsTyping] = useState<number | null>(null)
     const debouncedValue = useDebounce<number | null>(isTyping, 3000)
@@ -14,7 +14,7 @@ export const ChatForm = () => {
             setIsTyping(null)
             sendIsTyping(thisUser, false)
         }
-    }, [debouncedValue])
+    }, [sendIsTyping, thisUser, debouncedValue])
 
     const [textareaValue, setTextareaValue] = useState('')
 

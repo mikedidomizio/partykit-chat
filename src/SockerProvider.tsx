@@ -1,6 +1,6 @@
 import * as React from 'react'
 import usePartySocket from "partysocket/react";
-import {ReactNode, useState} from "react";
+import {ReactNode, useCallback, useState} from "react";
 import PartySocket from "partysocket";
 import {PartialRecord} from "@/types/PartialRecord";
 
@@ -12,7 +12,7 @@ type SocketContextType<T> = {
 
 const SocketContext = React.createContext<SocketContextType<unknown> | undefined>(undefined)
 
-function SocketProvider({children, room = 'my-room'}: { children: ReactNode, room?: string}) {
+function SocketProvider({children, room}: { children: ReactNode, room: string}) {
     const [messages, setMessages] = useState<Record<string, string>>({})
 
     const socket = usePartySocket({
@@ -27,7 +27,9 @@ function SocketProvider({children, room = 'my-room'}: { children: ReactNode, roo
         },
     })
 
-    const sendJson = (msg: Object) => socket.send(JSON.stringify(msg))
+    const sendJson = useCallback((msg: Object) => {
+        socket.send(JSON.stringify(msg))
+    }, [socket])
 
     const value = {
         messages,

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useCallback, useEffect, useState} from "react";
 import {useSocket} from "@/SockerProvider";
 import {ChatMessage, WsMessageProviderMessages} from "@/providers/Messages/message-server";
 
@@ -22,8 +22,8 @@ export function MessageProvider({children}: { children: ReactNode}) {
             setChatMessages([messages.newMessage])
         }
 
-        if (messages.isTyping) {
-            setUsersWhoAreTyping(messages.isTyping)
+        if (messages.usersTyping) {
+            setUsersWhoAreTyping(messages.usersTyping)
         }
 
         if (messages.messages) {
@@ -32,16 +32,16 @@ export function MessageProvider({children}: { children: ReactNode}) {
 
     }, [messages])
 
-    const sendMessage = (userId: string, text: string) => {
+    const sendMessage = useCallback((userId: string, text: string) => {
         sendJson({
             newMessage: {
                 id: userId,
                 text,
             },
         })
-    }
+    }, [sendJson])
 
-    const sendIsTyping = (userTyping: string, isTyping: boolean) => {
+    const sendIsTyping = useCallback((userTyping: string, isTyping: boolean) => {
         if (isTyping) {
             sendJson({
                 isTyping: userTyping
@@ -51,7 +51,7 @@ export function MessageProvider({children}: { children: ReactNode}) {
                 isNotTyping: userTyping
             })
         }
-    }
+    }, [sendJson])
 
     const value = {
         chatMessages,
