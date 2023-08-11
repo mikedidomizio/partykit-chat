@@ -8,7 +8,7 @@ export type ChatMessage = {
 export type WsMessageProviderMessages = {
     newMessage: ChatMessage,
     messages: ChatMessage[],
-    usersTyping: string,
+    usersTyping: string[],
     isTyping: string,
     isNotTyping: string
 }
@@ -27,7 +27,7 @@ export enum MessageMessages {
 
 export default {
     async onConnect(conn, room) {
-        const messages: ChatMessage[] = await room.storage.get("messages") ?? []
+        const messages = await room.storage.get<ChatMessage[]>("messages") ?? []
 
         if (messages.length) {
             conn.send(JSON.stringify({
@@ -68,13 +68,14 @@ export default {
         }
 
         // todo don't necessarily need to send the id, since we know the person sending this
-        if (parsedMsg.isNotTyping && parsedMsg.isTyping === conn.id) {
+        if (parsedMsg.isNotTyping && parsedMsg.isNotTyping === conn.id) {
+            console.log('is no longer typing!')
             const isTyping = await room.storage.get<string[]>("usersTyping") ?? []
             const userRemovedFromTypingList = isTyping.filter(user => user !== parsedMsg.isNotTyping)
             await room.storage.put("usersTyping", userRemovedFromTypingList)
 
             room.broadcast(JSON.stringify({
-                [MessageMessages.isNotTyping]: userRemovedFromTypingList
+                [MessageMessages.isTyping]: userRemovedFromTypingList
             }))
         }
     },
