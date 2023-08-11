@@ -21,13 +21,9 @@ export function MessageProvider({children}: { children: ReactNode}) {
         setChatMessages([obj])
     }, MessageMessages.newMessage)
 
-    useSocketMessage<string[]>((obj) => {
-        setUsersWhoAreTyping(obj)
-    }, MessageMessages.isTyping)
+    useSocketMessage<string[]>(setUsersWhoAreTyping, MessageMessages.isTyping)
 
-    useSocketMessage<ChatMessage[]>((obj) => {
-        setChatMessages(obj)
-    }, MessageMessages.messages)
+    useSocketMessage<ChatMessage[]>(setChatMessages, MessageMessages.messages)
 
     // need to useCallback as the function change will
     const sendMessage = useCallback((userId: string, text: string) => {

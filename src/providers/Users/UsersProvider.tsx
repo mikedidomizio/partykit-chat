@@ -23,13 +23,9 @@ function UsersProvider({children}: { children: ReactNode }) {
         }
     }, 3000)
 
-    useSocketMessage<string>((obj) => {
-        setThisUser(obj)
-    }, UserMessages.userId)
+    useSocketMessage<string>(setThisUser, UserMessages.userId)
 
-    useSocketMessage<User[]>((obj) => {
-        setUsers(obj)
-    }, UserMessages.users)
+    useSocketMessage<User[]>(setUsers, UserMessages.users)
 
     useSocketMessage<User>((obj) => {
         setUsers((users) => [...users, obj])
