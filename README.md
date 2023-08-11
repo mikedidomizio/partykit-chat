@@ -25,14 +25,14 @@ Visit `localhost:3000` will display the Next Chat application.
 
 I wanted to see if I could leverage React Context to kind of handle all the PartyKit interaction between the websocket server and the React components.  I wanted the components to be kept simple and just hook into the messages.
 
-There's a main `SocketProvider` that handles the PartyKit connection.  The Context provides a wrapper for the PartyKit connection that provides a `sendJson` function that
+There's a main Provider called [SocketProvider](https://github.com/mikedidomizio/partykit-chat/blob/main/src/SockerProvider.tsx) that handles the PartyKit connection.  The Context provides a wrapper for the PartyKit connection that provides a `sendJson` function that
 child providers can use to broadcast to the server.
 
 Each child provider is to be kept simple and single concern.  The idea behind this is to keep things readable, maintainable, and easier to debug.
 
-In this repo there is a `UsersProvider` that handles what happens when a user joins, leaves, who the user is, with the ability to also set their name.
+In this repo there is a [UsersProvider](https://github.com/mikedidomizio/partykit-chat/blob/main/src/providers/Users/UsersProvider.tsx) that handles what happens when a user joins, leaves, who the user is, with the ability to also set their name.
 
-As well as a `MessageProvider` that handles the chat portion of the application, messages in/out.  The separation of these two Providers prevents information bleeding between the two.  It allows us to continue adding more functionality as well through additional Providers as we see fit, without having to update the old code.
+As well as a [MessageProvider](https://github.com/mikedidomizio/partykit-chat/blob/main/src/providers/Messages/MessageProvider.tsx) that handles the chat portion of the application, messages in/out.  The separation of these two Providers prevents information bleeding between the two.  It allows us to continue adding more functionality as well through additional Providers as we see fit, without having to update the old code.
 
 Each provider comes with a "server" file that also keeps the PartyKit `server` file clean.  
 Each one has its own `onConnect`, `onMessage`, `onClose` that way it's clear how each one works separately.
