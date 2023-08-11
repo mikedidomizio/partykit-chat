@@ -45,7 +45,6 @@ export function MessageProvider({children}: { children: ReactNode}) {
                 isTyping: userTyping
             })
         } else {
-            console.log('send is not typing')
             sendJson({
                 isNotTyping: userTyping
             })
