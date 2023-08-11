@@ -50,7 +50,6 @@ export default {
 
         // todo don't necessarily need to send the id, since we know the person sending this
         if (parsedMsg.newMessage && parsedMsg.newMessage.id === conn.id) {
-            console.log('new message')
             const messages: ChatMessage[] = await room.storage.get("messages") ?? []
             messages.push(parsedMsg.newMessage)
             await room.storage.put("messages", messages)
