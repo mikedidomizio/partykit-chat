@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev-party": "npx concurrently \"npm run dev\" \"npm run party\"",
+    "party": "rm -rf ./tmp/test && partykit dev ./src/server/server.ts --persist ./tmp/test",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "party": "rm -rf ./tmp/test && partykit dev ./src/server/server.ts --persist ./tmp/test"
+    "lint": "next lint"
   },
   "dependencies": {
     "@types/node": "20.4.5",
