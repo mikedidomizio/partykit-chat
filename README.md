@@ -3,7 +3,7 @@
 ## Description
 
 This is a basic chat application with rooms and "who is typing" using Next/React + PartyKit.
-The purpose behind this is to demo a clean way of creating a React app with PartyKit.
+The purpose behind this is to demo one way of creating a React app with PartyKit.
 
 ### Quick Start
 
