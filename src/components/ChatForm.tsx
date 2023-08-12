@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUsers } from "@/providers/Users/UsersProvider";
-import { useMessage } from "@/providers/Messages/MessageProvider";
+import { useMessage } from "@/providers/Message/MessageProvider";
 import { useDebounce } from "usehooks-ts";
 
 export const ChatForm = () => {

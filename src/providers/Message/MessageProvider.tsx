@@ -4,7 +4,7 @@ import {
   ChatMessage,
   MessagesOutgoing,
   MessagesOutgoingType,
-} from "@/providers/Messages/message-server";
+} from "@/providers/Message/message-server";
 import { useSocket, useSocketMessage } from "@/providers/Socket/SockerProvider";
 
 type MessageContextType = {
