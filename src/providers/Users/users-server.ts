@@ -1,15 +1,19 @@
-import { PartyKitServer } from "partykit/server";
 import {
   PartyKitExtended,
   PartyKitServerWithMoreFun,
 } from "@/server/partykit-extended";
+import {ChatMessage} from "@/providers/Messages/message-server";
 
-export type User = {
-  id: string;
-  name?: string;
+export type UsersIncoming = {
+  changeName: User;
+  newMessage: ChatMessage;
+  newUser: string;
+  isTyping: string;
+  isNotTyping: string;
 };
 
-export const UserMessages = {
+export const UsersOutgoing: Record<keyof UsersOutgoingType, string> = {
+  changeName: "changeName",
   nameChanged: "nameChanged",
   newUser: "newUser",
   removeUser: "removeUser",
@@ -17,11 +21,25 @@ export const UserMessages = {
   users: "users",
 } as const;
 
+export type UsersOutgoingType = {
+  changeName: string,
+  nameChanged: unknown,
+  newUser: unknown,
+  removeUser: string,
+  userId: unknown,
+  users: User[],
+}
+
 const Storage = {
   users: "users",
 } as const;
 
 type Users = Map<string, User>;
+
+export type User = {
+  id: string;
+  name?: string;
+};
 
 export default {
   ...PartyKitExtended,
@@ -45,13 +63,13 @@ export default {
 
     // ⚠️ `conn.send` before broadcast otherwise the `send` doesn't fire
     conn.sendJson({
-      [UserMessages.userId]: conn.id,
-      [UserMessages.users]: flatUsersArrId,
+      [UsersOutgoing.userId]: conn.id,
+      [UsersOutgoing.users]: flatUsersArrId,
     });
 
     room.broadcastJson(
       {
-        [UserMessages.newUser]: {
+        [UsersOutgoing.newUser]: {
           id: conn.id,
         },
       },
@@ -69,13 +87,13 @@ export default {
       await room.storage.put("users", users);
 
       room.broadcastJson({
-        [UserMessages.removeUser]: conn.id,
+        [UsersOutgoing.removeUser]: conn.id,
       });
     }
   },
 
   async onMessageExtended(msg, conn, room) {
-    const parsedMsg = JSON.parse(msg as string);
+    const parsedMsg: UsersIncoming = JSON.parse(msg as string);
 
     if (parsedMsg.newUser) {
       room.broadcast(msg as string);
@@ -88,13 +106,12 @@ export default {
         const user = users.get(conn.id);
 
         if (user) {
-          user.name = parsedMsg.changeName;
-          users.set(conn.id, user);
+          users.set(conn.id, parsedMsg.changeName);
 
           await room.storage.put<Users>(Storage.users, users);
 
           room.broadcastJson({
-            [UserMessages.nameChanged]: {
+            [UsersOutgoing.nameChanged]: {
               id: conn.id,
               name: parsedMsg.changeName,
             },

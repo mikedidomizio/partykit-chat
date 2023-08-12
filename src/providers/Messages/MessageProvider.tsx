@@ -2,8 +2,7 @@ import * as React from "react";
 import { ReactNode, useCallback, useState } from "react";
 import {
   ChatMessage,
-  MessageMessages,
-  WsMessageProviderMessages,
+  MessagesOutgoing, MessagesOutgoingType,
 } from "@/providers/Messages/message-server";
 import { useSocket, useSocketMessage } from "@/SockerProvider";
 
@@ -19,17 +18,17 @@ const MessageContext = React.createContext<MessageContextType | undefined>(
 );
 
 export function MessageProvider({ children }: { children: ReactNode }) {
-  const { sendJson } = useSocket<WsMessageProviderMessages>();
+  const { sendJson } = useSocket<MessagesOutgoingType>();
   const [chatMessages, setChatMessages] = useState<Partial<ChatMessage>[]>([]);
   const [usersWhoAreTyping, setUsersWhoAreTyping] = useState<string[]>([]);
 
   useSocketMessage<ChatMessage>((obj) => {
     setChatMessages([obj]);
-  }, MessageMessages.newMessage);
+  }, MessagesOutgoing.newMessage);
 
-  useSocketMessage<string[]>(setUsersWhoAreTyping, MessageMessages.isTyping);
+  useSocketMessage<string[]>(setUsersWhoAreTyping, MessagesOutgoing.isTyping);
 
-  useSocketMessage<ChatMessage[]>(setChatMessages, MessageMessages.messages);
+  useSocketMessage<ChatMessage[]>(setChatMessages, MessagesOutgoing.messages);
 
   // need to useCallback as the function change will
   const sendMessage = useCallback(
