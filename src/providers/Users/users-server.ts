@@ -2,7 +2,7 @@ import {
   PartyKitExtended,
   PartyKitServerWithMoreFun,
 } from "@/server/partykit-extended";
-import {ChatMessage} from "@/providers/Messages/message-server";
+import { ChatMessage } from "@/providers/Messages/message-server";
 
 export type UsersIncoming = {
   changeName: User;
@@ -22,13 +22,13 @@ export const UsersOutgoing: Record<keyof UsersOutgoingType, string> = {
 } as const;
 
 export type UsersOutgoingType = {
-  changeName: string,
-  nameChanged: unknown,
-  newUser: unknown,
-  removeUser: string,
-  userId: unknown,
-  users: User[],
-}
+  changeName: string;
+  nameChanged: unknown;
+  newUser: unknown;
+  removeUser: string;
+  userId: unknown;
+  users: User[];
+};
 
 const Storage = {
   users: "users",

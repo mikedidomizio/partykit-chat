@@ -2,9 +2,10 @@ import * as React from "react";
 import { ReactNode, useCallback, useState } from "react";
 import {
   ChatMessage,
-  MessagesOutgoing, MessagesOutgoingType,
+  MessagesOutgoing,
+  MessagesOutgoingType,
 } from "@/providers/Messages/message-server";
-import { useSocket, useSocketMessage } from "@/SockerProvider";
+import { useSocket, useSocketMessage } from "@/providers/Socket/SockerProvider";
 
 type MessageContextType = {
   chatMessages: Partial<ChatMessage>[];

@@ -1,7 +1,11 @@
 import * as React from "react";
 import { ReactNode, useEffect, useState } from "react";
-import { useSocket, useSocketMessage } from "@/SockerProvider";
-import {User, UsersOutgoing, UsersOutgoingType} from "@/providers/Users/users-server";
+import { useSocket, useSocketMessage } from "@/providers/Socket/SockerProvider";
+import {
+  User,
+  UsersOutgoing,
+  UsersOutgoingType,
+} from "@/providers/Users/users-server";
 import { useTimeout } from "usehooks-ts";
 
 type UsersContextType = {
