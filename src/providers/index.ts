@@ -1,9 +1,9 @@
-import MessageServer from './Messages/message-server'
-import UsersServer from './Users/users-server'
+import MessageServer from "./Messages/message-server";
+import UsersServer from "./Users/users-server";
 
 const ServerMiddleware = {
-    UsersServer,
-    MessageServer,
-}
+  UsersServer,
+  MessageServer,
+};
 
-export default ServerMiddleware
+export default ServerMiddleware;
