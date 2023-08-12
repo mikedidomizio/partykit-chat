@@ -2,7 +2,7 @@ import {
   PartyKitExtended,
   PartyKitServerWithMoreFun,
 } from "@/server/partykit-extended";
-import { ChatMessage } from "@/providers/Messages/message-server";
+import { ChatMessage } from "@/providers/Message/message-server";
 
 export type UsersIncoming = {
   changeName: User;

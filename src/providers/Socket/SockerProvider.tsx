@@ -4,7 +4,7 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 
 type SocketContextType<T> = {
   /**
-   * Ideally use the useMessages hook instead to narrow down the data you are looking for
+   * Ideally use the useSocketMessage hook instead to narrow down the data you are looking for
    */
   messages: Record<keyof T, any>;
   setMessages: React.Dispatch<React.SetStateAction<Record<string, string>>>;

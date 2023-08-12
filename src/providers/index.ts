@@ -1,4 +1,4 @@
-import MessageServer from "./Messages/message-server";
+import MessageServer from "@/providers/Message/message-server";
 import UsersServer from "./Users/users-server";
 
 const ServerMiddleware = {
