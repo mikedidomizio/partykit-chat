@@ -21,15 +21,15 @@ export const MessagesOutgoing: Record<keyof MessagesOutgoingType, string> = {
 } as const;
 
 export type MessagesOutgoingType = {
-  isTyping: string,
-  isNotTyping: string,
-  newMessage: ChatMessage,
-  messages: unknown,
-  newUser: unknown,
-  removeUser: unknown,
-  userId: unknown,
-  users: unknown,
-}
+  isTyping: string;
+  isNotTyping: string;
+  newMessage: ChatMessage;
+  messages: unknown;
+  newUser: unknown;
+  removeUser: unknown;
+  userId: unknown;
+  users: unknown;
+};
 
 const Storage = {
   messages: "messages",

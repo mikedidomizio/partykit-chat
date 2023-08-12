@@ -1,5 +1,5 @@
 "use client";
-import { SocketProvider } from "@/SockerProvider";
+import { SocketProvider } from "@/providers/Socket/SockerProvider";
 import React from "react";
 import { Content } from "@/components/Content";
 import { UsersProvider } from "@/providers/Users/UsersProvider";
