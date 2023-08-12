@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUsers } from "@/providers/Users/UsersProvider";
 import { useMessage } from "@/providers/Message/MessageProvider";
 import { useDebounce } from "usehooks-ts";
+import { ChangeName } from "@/components/ChangeName";
 
 export const ChatForm = () => {
   const { sendIsTyping, sendMessage, usersWhoAreTyping } = useMessage();
@@ -41,15 +42,18 @@ export const ChatForm = () => {
         placeholder="Type a message..."
         value={textareaValue}
         onChange={handleUserTyping}
-        className="textarea textarea-bordered w-full resize-none"
+        className="textarea textarea-bordered w-full resize-none rounded-2xl mb-2 textarea-primary"
       />
-      <button
-        className="btn"
-        disabled={!thisUser || textareaValue.trim() === ""}
-        onClick={handleSubmit}
-      >
-        Submit
-      </button>
+      <div className="flex flex-row justify-between">
+        <button
+          className="btn btn-primary rounded-2xl"
+          disabled={!thisUser || textareaValue.trim() === ""}
+          onClick={handleSubmit}
+        >
+          Send Message
+        </button>
+        <ChangeName />
+      </div>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import {
 import { ChatMessage } from "@/providers/Message/message-server";
 
 export type UsersIncoming = {
-  changeName: User;
+  changeName: string;
   newMessage: ChatMessage;
   newUser: string;
   isTyping: string;
@@ -106,7 +106,10 @@ export default {
         const user = users.get(conn.id);
 
         if (user) {
-          users.set(conn.id, parsedMsg.changeName);
+          users.set(conn.id, {
+            id: conn.id,
+            name: parsedMsg.changeName,
+          });
 
           await room.storage.put<Users>(Storage.users, users);
 
