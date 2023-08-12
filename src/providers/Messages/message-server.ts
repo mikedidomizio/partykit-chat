@@ -3,20 +3,13 @@ import {
   PartyKitServerWithMoreFun,
 } from "@/server/partykit-extended";
 
-export type ChatMessage = {
-  id: string;
-  text: string;
-};
-
-export type WsMessageProviderMessages = {
+export type MessagesIncoming = {
   newMessage: ChatMessage;
-  messages: ChatMessage[];
-  usersTyping: string[];
   isTyping: string;
   isNotTyping: string;
 };
 
-export const MessageMessages = {
+export const MessagesOutgoing: Record<keyof MessagesOutgoingType, string> = {
   isTyping: "isTyping",
   isNotTyping: "isNotTyping",
   newMessage: "newMessage",
@@ -27,10 +20,26 @@ export const MessageMessages = {
   users: "users",
 } as const;
 
+export type MessagesOutgoingType = {
+  isTyping: string,
+  isNotTyping: string,
+  newMessage: ChatMessage,
+  messages: unknown,
+  newUser: unknown,
+  removeUser: unknown,
+  userId: unknown,
+  users: unknown,
+}
+
 const Storage = {
   messages: "messages",
   usersTyping: "usersTyping",
 } as const;
+
+export type ChatMessage = {
+  id: string;
+  text: string;
+};
 
 export default {
   ...PartyKitExtended,
@@ -54,11 +63,11 @@ export default {
     await room.storage.put(Storage.usersTyping, userRemovedFromTypingList);
 
     room.broadcastJson({
-      [MessageMessages.isTyping]: userRemovedFromTypingList,
+      [MessagesOutgoing.isTyping]: userRemovedFromTypingList,
     });
   },
   async onMessageExtended(msg, conn, room) {
-    const parsedMsg: WsMessageProviderMessages = JSON.parse(msg as string);
+    const parsedMsg: MessagesIncoming = JSON.parse(msg as string);
 
     if (parsedMsg.newMessage) {
       const messages: ChatMessage[] =
@@ -77,7 +86,7 @@ export default {
       await room.storage.put(Storage.usersTyping, userAddedToTypingList);
 
       room.broadcastJson({
-        [MessageMessages.isTyping]: userAddedToTypingList,
+        [MessagesOutgoing.isTyping]: userAddedToTypingList,
       });
     }
 
@@ -90,7 +99,7 @@ export default {
       await room.storage.put(Storage.usersTyping, userRemovedFromTypingList);
 
       room.broadcastJson({
-        [MessageMessages.isTyping]: userRemovedFromTypingList,
+        [MessagesOutgoing.isTyping]: userRemovedFromTypingList,
       });
     }
   },

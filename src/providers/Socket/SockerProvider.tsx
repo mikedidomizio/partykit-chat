@@ -1,7 +1,6 @@
 import * as React from "react";
 import usePartySocket from "partysocket/react";
 import { ReactNode, useCallback, useEffect, useState } from "react";
-import { PartialRecord } from "@/types/PartialRecord";
 
 type SocketContextType<T> = {
   /**
@@ -9,7 +8,7 @@ type SocketContextType<T> = {
    */
   messages: Record<keyof T, any>;
   setMessages: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  sendJson: (obj: PartialRecord<keyof T, any>) => void;
+  sendJson: (obj: Partial<{ [key in keyof T]: T[key] }>) => void;
 };
 
 const SocketContext = React.createContext<

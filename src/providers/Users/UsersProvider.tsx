@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ReactNode, useEffect, useState } from "react";
 import { useSocket, useSocketMessage } from "@/SockerProvider";
-import { User, UserMessages } from "@/providers/Users/users-server";
+import {User, UsersOutgoing, UsersOutgoingType} from "@/providers/Users/users-server";
 import { useTimeout } from "usehooks-ts";
 
 type UsersContextType = {
@@ -15,7 +15,7 @@ const UsersContext = React.createContext<UsersContextType | undefined>(
 );
 
 function UsersProvider({ children }: { children: ReactNode }) {
-  const { sendJson } = useSocket<typeof UserMessages>();
+  const { sendJson } = useSocket<UsersOutgoingType>();
   const [users, setUsers] = useState<User[]>([]);
   const [thisUser, setThisUser] = useState<string | null>(null);
 
@@ -25,17 +25,17 @@ function UsersProvider({ children }: { children: ReactNode }) {
     }
   }, 3000);
 
-  useSocketMessage<string>(setThisUser, UserMessages.userId);
+  useSocketMessage<string>(setThisUser, UsersOutgoing.userId);
 
-  useSocketMessage<User[]>(setUsers, UserMessages.users);
+  useSocketMessage<User[]>(setUsers, UsersOutgoing.users);
 
   useSocketMessage<User>((obj) => {
     setUsers((users) => [...users, obj]);
-  }, UserMessages.newUser);
+  }, UsersOutgoing.newUser);
 
   useSocketMessage<string>((userId) => {
     setUsers((users) => users.filter((user) => user.id !== userId));
-  }, UserMessages.removeUser);
+  }, UsersOutgoing.removeUser);
 
   useSocketMessage<User>((obj) => {
     setUsers((users) => {
@@ -50,14 +50,16 @@ function UsersProvider({ children }: { children: ReactNode }) {
         return user;
       });
     });
-  }, UserMessages.nameChanged);
+  }, UsersOutgoing.nameChanged);
 
   // on unload we tell the server to remove the user
   useEffect(() => {
     return () => {
-      sendJson({
-        removeUser: thisUser,
-      });
+      if (thisUser) {
+        sendJson({
+          removeUser: thisUser,
+        });
+      }
     };
   }, [sendJson, thisUser]);
 
