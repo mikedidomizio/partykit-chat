@@ -25,7 +25,7 @@ Visit `localhost:3000` will display the Next Chat application.
 
 I wanted to see if I could leverage React Context to kind of handle all the PartyKit interaction between the websocket server and the React components. I wanted the components to be kept simple and just hook into the messages.
 
-There's a main Provider called [SocketProvider](https://github.com/mikedidomizio/partykit-chat/blob/main/src/SockerProvider.tsx) that handles the PartyKit connection. The Context provides a wrapper for the PartyKit connection that provides a `sendJson` function that
+There's a main Provider called [SocketProvider](https://github.com/mikedidomizio/partykit-chat/blob/main/src/providers/Socket/SockerProvider.tsx) that handles the PartyKit connection. The Context provides a wrapper for the PartyKit connection that provides a `sendJson` function that
 child providers can use to broadcast to the server.
 
 Each child provider is to be kept simple and single concern. The idea behind this is to keep things readable, maintainable, and easier to debug.
