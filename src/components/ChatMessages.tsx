@@ -28,7 +28,7 @@ export const ChatMessages = () => {
 
   return (
     <textarea
-      className="textarea textarea-bordered w-full h-full resize-none"
+      className="textarea textarea-bordered w-full flex-1 resize-none rounded-2xl textarea-primary overflow-visible"
       readOnly
       key={JSON.stringify(messages)}
       value={textFormatted}

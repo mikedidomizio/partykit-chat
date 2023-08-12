@@ -1,5 +1,5 @@
-import { useMessage } from "@/providers/Message/MessageProvider";
 import { useUsers } from "@/providers/Users/UsersProvider";
+import { useMessage } from "@/providers/Message/MessageProvider";
 
 export function WhoIsTyping() {
   const { usersWhoAreTyping } = useMessage();
@@ -37,11 +37,13 @@ export function WhoIsTyping() {
   }
 
   return (
-    <div className="min-h-[60px]">
-      {someoneTyping ? (
-        <span className="loading loading-dots loading-sm" />
-      ) : null}
-      {textFormatted}
+    <div className="h-[26.5px]">
+      <div>
+        {someoneTyping ? (
+          <div className="loading loading-dots loading-sm top-1 relative mr-2" />
+        ) : null}
+        {textFormatted}
+      </div>
     </div>
   );
 }

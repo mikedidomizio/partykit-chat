@@ -11,7 +11,7 @@ export default function Page({ params }: { params: { room: string } }) {
       <SocketProvider room={params.room}>
         <UsersProvider>
           <MessageProvider>
-            <Content />
+            <Content room={params.room} />
           </MessageProvider>
         </UsersProvider>
       </SocketProvider>

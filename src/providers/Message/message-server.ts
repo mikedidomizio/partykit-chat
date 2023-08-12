@@ -79,14 +79,15 @@ export default {
 
     if (parsedMsg.isTyping) {
       const isTyping =
-        (await room.storage.get<string[]>(Storage.messages)) ?? [];
-      const userAddedToTypingList = [
+        (await room.storage.get<string[]>(Storage.usersTyping)) ?? [];
+      const currentUsersTyping = [
         ...new Set([...isTyping, parsedMsg.isTyping]),
       ];
-      await room.storage.put(Storage.usersTyping, userAddedToTypingList);
+
+      await room.storage.put(Storage.usersTyping, currentUsersTyping);
 
       room.broadcastJson({
-        [MessagesOutgoing.isTyping]: userAddedToTypingList,
+        [MessagesOutgoing.isTyping]: currentUsersTyping,
       });
     }
 
