@@ -1,18 +1,20 @@
-import * as React from 'react'
+import * as React from "react";
 import usePartySocket from "partysocket/react";
-import {ReactNode, useCallback, useEffect, useState} from "react";
-import {PartialRecord} from "@/types/PartialRecord";
+import { ReactNode, useCallback, useEffect, useState } from "react";
+import { PartialRecord } from "@/types/PartialRecord";
 
 type SocketContextType<T> = {
-    /**
-     * Ideally use the useMessages hook instead to narrow down the data you are looking for
-     */
-    messages: Record<keyof T, any>,
-    setMessages:  React.Dispatch<React.SetStateAction<Record<string, string>>>,
-    sendJson: (obj: PartialRecord<any, any>) => void,
-}
+  /**
+   * Ideally use the useMessages hook instead to narrow down the data you are looking for
+   */
+  messages: Record<keyof T, any>;
+  setMessages: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  sendJson: (obj: PartialRecord<keyof T, any>) => void;
+};
 
-const SocketContext = React.createContext<SocketContextType<unknown> | undefined>(undefined)
+const SocketContext = React.createContext<
+  SocketContextType<unknown> | undefined
+>(undefined);
 
 /**
  * The provider that should wrap everything PartyKit
@@ -20,34 +22,43 @@ const SocketContext = React.createContext<SocketContextType<unknown> | undefined
  * @param room      The PartyKit room
  * @constructor
  */
-export function SocketProvider({children, room}: { children: ReactNode, room: string}) {
-    const [messages, setMessages] = useState<Record<string, string>>({})
+export function SocketProvider({
+  children,
+  room,
+}: {
+  children: ReactNode;
+  room: string;
+}) {
+  const [messages, setMessages] = useState<Record<string, string>>({});
 
-    const socket = usePartySocket({
-        host: "localhost:1999",
-        room,
-        onClose() {
-        },
-        // onOpen(event) {
-        // },
-        onMessage(event) {
-            setMessages(JSON.parse(event.data))
-        },
-    })
+  const socket = usePartySocket({
+    host: "localhost:1999",
+    room,
+    onClose() {},
+    // onOpen(event) {
+    // },
+    onMessage(event) {
+      setMessages(JSON.parse(event.data));
+    },
+  });
 
-    const sendJson = useCallback((msg: Object) => {
-        socket.send(JSON.stringify(msg))
-    }, [socket])
+  const sendJson = useCallback(
+    (msg: Object) => {
+      socket.send(JSON.stringify(msg));
+    },
+    [socket],
+  );
 
-    const value = {
-        messages,
-        setMessages,
-        sendJson,
-    }
+  const value = {
+    messages,
+    setMessages,
+    sendJson,
+  };
 
-    return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+  return (
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+  );
 }
-
 
 /**
  * Gives the ability to access the SocketProvider return values like `sendJson` and `messages`
@@ -55,11 +66,11 @@ export function SocketProvider({children, room}: { children: ReactNode, room: st
  * This should only be used by child providers and shouldn't be used in components
  */
 export function useSocket<T>() {
-    const context = React.useContext(SocketContext)
-    if (context === undefined) {
-        throw new Error('useSocket must be used within a SocketProvider')
-    }
-    return context as SocketContextType<T>
+  const context = React.useContext(SocketContext);
+  if (context === undefined) {
+    throw new Error("useSocket must be used within a SocketProvider");
+  }
+  return context as SocketContextType<T>;
 }
 
 /**
@@ -67,17 +78,20 @@ export function useSocket<T>() {
  * @param callbackFn    The callbackFn that is called when the matching message is found
  * @param message       When a message with this key is found, the callbackFn is called
  */
-export function useSocketMessage<T>(callbackFn: (args: T) => void, message: string) {
-    const {messages, setMessages} = useSocket<T>()
-    // @ts-ignore
-    const possibleMessage = messages[message]
+export function useSocketMessage<T>(
+  callbackFn: (args: T) => void,
+  message: string,
+) {
+  const { messages, setMessages } = useSocket<T>();
+  // @ts-ignore
+  const possibleMessage = messages[message];
 
-    useEffect(() => {
-        if (possibleMessage) {
-            // clear the message so providers don't have to handle things, they will only fire once
-            // this is done before the `callbackFn`.  I feel if it fails it may not continue therefore if it fails, that message is discarded
-            setMessages({})
-            callbackFn(possibleMessage)
-        }
-    }, [callbackFn, possibleMessage, setMessages])
+  useEffect(() => {
+    if (possibleMessage) {
+      // clear the message so providers don't have to handle things, they will only fire once
+      // this is done before the `callbackFn`.  I feel if it fails it may not continue therefore if it fails, that message is discarded
+      setMessages({});
+      callbackFn(possibleMessage);
+    }
+  }, [callbackFn, possibleMessage, setMessages]);
 }
