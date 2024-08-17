@@ -1,5 +1,8 @@
 # PartyKit with Next/React /w React Context
 
+> [!WARNING]  
+> Archived: was built on top of an old version of PartyKit
+
 <p align="center">
     <img src="demo.gif" style="height: 400px" />
 </p>
